@@ -23,7 +23,7 @@ jobs:
 
             SIGNING_KEY_PASSWORD = ${{ secrets.SIGNING_KEY_PASSWORD }}
             SIGNING_KEY_ALIAS = ${{ secrets.SIGNING_KEY_ALIAS }}
-            SIGNING_KEY_STORE_PASSWORD = ${{ secrets.SIGNING_KEY_PASSWORD }}
+            SIGNING_KEY_STORE_PASSWORD = ${{ secrets.SIGNING_KEY_STORE_PASSWORD }}
           write-mode: overwrite
 
       - name: Write google-services.json

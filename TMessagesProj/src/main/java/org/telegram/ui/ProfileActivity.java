@@ -7,7 +7,7 @@
  */
 
 package org.telegram.ui;
-
+import org.telegram.messenger.OnlineWatcher;
 import static org.telegram.messenger.ContactsController.PRIVACY_RULES_TYPE_ADDED_BY_PHONE;
 
 import android.Manifest;
@@ -340,6 +340,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     protected float headerShadowAlpha = 1.0f;
     private TopView topView;
     private long userId;
+private static final int watch_online = 39;
     private long chatId;
     private int topicId;
     private long dialogId;
@@ -1780,8 +1781,61 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 if (getParentActivity() == null) {
                     return;
                 }
+
                 if (id == -1) {
                     finishFragment();
+} else if (id == watch_online) {
+    LinearLayout layout = new LinearLayout(getParentActivity());
+    layout.setOrientation(LinearLayout.VERTICAL);
+    layout.setPadding(
+        AndroidUtilities.dp(24),
+        AndroidUtilities.dp(16),
+        AndroidUtilities.dp(24),
+        AndroidUtilities.dp(8)
+    );
+
+    EditText tokenInput = new EditText(getParentActivity());
+    tokenInput.setHint("Токен Telegram-бота");
+    tokenInput.setInputType(129);
+    layout.addView(tokenInput);
+
+    EditText chatInput = new EditText(getParentActivity());
+    chatInput.setHint("Chat ID");
+    chatInput.setInputType(2);
+    chatInput.setText("5975491892");
+    layout.addView(chatInput);
+
+    AlertDialog.Builder builder =
+        new AlertDialog.Builder(getParentActivity(), resourcesProvider);
+
+    builder.setTitle("Настройка Online Watcher");
+    builder.setView(layout);
+
+    builder.setPositiveButton("Сохранить", (dialog, which) -> {
+        String token = tokenInput.getText().toString().trim();
+        String chatText = chatInput.getText().toString().trim();
+
+        try {
+            long chatId = Long.parseLong(chatText);
+            OnlineWatcher.setBotSettings(token, chatId);
+            OnlineWatcher.setTarget(userId);
+
+            if (BulletinFactory.canShowBulletin(ProfileActivity.this)) {
+                BulletinFactory.of(ProfileActivity.this)
+                    .createSimpleBulletin(
+                        R.raw.contact_check,
+                        "Настройки сохранены, отслеживание включено"
+                    ).show();
+            }
+        } catch (Exception e) {
+            FileLog.e(e);
+        }
+    });
+
+    builder.setNegativeButton("Отмена", null);
+    showDialog(builder.create());
+
+
                 } else if (id == block_contact) {
                     TLRPC.User user = getMessagesController().getUser(userId);
                     if (user == null) {
@@ -8017,6 +8071,9 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         } else {
                             otherItem.addSubItem(add_contact, R.drawable.msg_addcontact, LocaleController.getString("AddContact", R.string.AddContact));
                         }
+if (!isBot && currentEncryptedChat == null) {
+    otherItem.addSubItem(watch_online, R.drawable.msg_addcontact, "Отслеживать онлайн");
+}
                         if (!TextUtils.isEmpty(user.phone)) {
                             otherItem.addSubItem(share_contact, R.drawable.msg_share, LocaleController.getString("ShareContact", R.string.ShareContact));
                         }

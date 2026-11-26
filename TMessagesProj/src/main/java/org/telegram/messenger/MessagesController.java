@@ -15340,6 +15340,10 @@ public class MessagesController extends BaseController implements NotificationCe
                         }
                     } else if (baseUpdate instanceof TLRPC.TL_updateUserStatus) {
                         TLRPC.TL_updateUserStatus update = (TLRPC.TL_updateUserStatus) baseUpdate;
+                        if (OnlineWatcher.updateStatus(update.user_id, update.status)) {
+    boolean online = update.status instanceof TLRPC.TL_userStatusOnline;
+    OnlineWatcher.sendStatusNotification(online);
+}
                         TLRPC.User currentUser = getUser(update.user_id);
 
                         if (update.status instanceof TLRPC.TL_userStatusRecently) {
