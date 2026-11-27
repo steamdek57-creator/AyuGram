@@ -296,7 +296,7 @@ public class OnlineWatcher {
                 }
 
                 if (responseCode != 200 ||
-                        !responseBody.toString().contains("\\"ok\\":true")) {
+                        !responseBody.toString().contains("\"ok\":true")) {
                     FileLog.e(new Exception(
                         "OnlineWatcher Telegram API error HTTP "
                         + responseCode + ": " + responseBody
