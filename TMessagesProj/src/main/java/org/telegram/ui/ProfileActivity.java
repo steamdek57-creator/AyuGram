@@ -341,6 +341,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     private TopView topView;
     private long userId;
 private static final int watch_online = 39;
+    private static final int stats_online = 40;
     private long chatId;
     private int topicId;
     private long dialogId;
@@ -1835,6 +1836,14 @@ private static final int watch_online = 39;
     builder.setNegativeButton("Отмена", null);
     showDialog(builder.create());
 
+
+                } else if (id == stats_online) {
+                    AlertDialog.Builder builder =
+                        new AlertDialog.Builder(getParentActivity(), resourcesProvider);
+                    builder.setTitle("Online Watcher");
+                    builder.setMessage(OnlineWatcher.getDashboardText());
+                    builder.setPositiveButton("Закрыть", null);
+                    showDialog(builder.create());
 
                 } else if (id == block_contact) {
                     TLRPC.User user = getMessagesController().getUser(userId);
@@ -8073,6 +8082,7 @@ private static final int watch_online = 39;
                         }
 if (!isBot && currentEncryptedChat == null) {
     otherItem.addSubItem(watch_online, R.drawable.msg_addcontact, "Отслеживать онлайн");
+                        otherItem.addSubItem(stats_online, R.drawable.msg_stats, "Статистика Online Watcher");
 }
                         if (!TextUtils.isEmpty(user.phone)) {
                             otherItem.addSubItem(share_contact, R.drawable.msg_share, LocaleController.getString("ShareContact", R.string.ShareContact));
@@ -8094,6 +8104,7 @@ if (!isBot && currentEncryptedChat == null) {
 
                     if (!isBot && currentEncryptedChat == null) {
                         otherItem.addSubItem(watch_online, R.drawable.msg_addcontact, "Отслеживать онлайн");
+                        otherItem.addSubItem(stats_online, R.drawable.msg_stats, "Статистика Online Watcher");
                     }
                     if (!TextUtils.isEmpty(user.phone)) {
                         otherItem.addSubItem(share_contact, R.drawable.msg_share, LocaleController.getString("ShareContact", R.string.ShareContact));
