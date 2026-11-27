@@ -40,6 +40,10 @@ jobs:
           fileDir: ./TMessagesProj/config
           encodedString: ${{ secrets.SIGNING_KEYSTORE_FILE_IN_BASE64 }}
 
+      - name: Remove unavailable Microsoft repository
+        run: |
+          sudo find /etc/apt -type f \( -name '*.list' -o -name '*.sources' \) -exec grep -l 'packages.microsoft.com' {} \; | xargs -r sudo rm -f
+
       - name: Update packages
         run: sudo apt-get update
 
