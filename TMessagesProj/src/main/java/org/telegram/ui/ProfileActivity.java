@@ -8092,6 +8092,9 @@ if (!isBot && currentEncryptedChat == null) {
                         createAutoDeleteItem(context);
                     }
 
+                    if (!isBot && currentEncryptedChat == null) {
+                        otherItem.addSubItem(watch_online, R.drawable.msg_addcontact, "Отслеживать онлайн");
+                    }
                     if (!TextUtils.isEmpty(user.phone)) {
                         otherItem.addSubItem(share_contact, R.drawable.msg_share, LocaleController.getString("ShareContact", R.string.ShareContact));
                     }
